@@ -20,7 +20,7 @@ Currently the include path needs a little help finding things...
 Clone, compile and make the driver
 
 6. cd ~/
-7. git clone https://github.com/dreamfactorysoftware/PDO_IBM-1.3.4-patched.git
+7. git clone https://github.com/kunkanon/PDO_IBM-1.3.5-patched
 8. cd ~/PDO_IBM-1.3.5-patched
 9. phpize
 10. ./configure --with-pdo-ibm=/home/username/dsdriver/lib
