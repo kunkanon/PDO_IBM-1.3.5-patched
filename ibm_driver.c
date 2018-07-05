@@ -734,6 +734,19 @@ static int ibm_handle_get_attribute(
 #endif
 			return TRUE;
 
+			/* new attr_connection_status pdo attr */
+			case PDO_ATTR_CONNECTION_STATUS:
+						rc = SQLGetInfo(conn_res->hdbc, SQL_DBMS_NAME, 
+								(SQLPOINTER)value, MAX_DBMS_IDENTIFIER_NAME, NULL);
+						check_dbh_error(rc, "SQLGetInfo");
+			#if PHP_MAJOR_VERSION >= 7
+			                        ZVAL_BOOL(return_value,value);
+			#else
+						ZVAL_BOOL(return_value,value);
+			#endif
+						return TRUE;
+			/* end attr_connection_status pdo attr */		
+			
 #ifdef PASE /* i5/os release dependent check */
 		case PDO_ATTR_SERVER_VERSION:
 			rc = SQLGetInfo(conn_res->hdbc, SQL_DBMS_VER,
