@@ -1,9 +1,5 @@
 # PDO_IBM-1.3.5-patched
-- Fixed Fatal error: Allowed memory in PDO $dbh->quote() function 
-- Added support to PDO::ATTR_CONNECTION_STATUS
-
-PHP 7.0 pdo_ibm extension patched to resolve a "undefined symbol: Z_STRVAL_PP"
-This patch resolves the bug posted here https://bugs.php.net/bug.php?id=74114 and here https://bugs.php.net/bug.php?id=76426
+- PHP 7.0 pdo_ibm extension patched to resolve various erros and implement new functions
 
 ## Installing IBM DB2 Driver.
 
