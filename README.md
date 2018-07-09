@@ -1,5 +1,5 @@
 # PDO_IBM-1.3.5-patched
-- PHP 7.0 pdo_ibm extension patched to resolve various erros and implement new functions
+- PHP 7.0 pdo_ibm extension patched fixing some errors and improving new features.
 
 ## Installing IBM DB2 Driver.
 
