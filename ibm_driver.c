@@ -637,54 +637,44 @@ static int ibm_handle_fetch_error(
 	return TRUE;
 }
 
+/* 1.3.5.1 solved bug Quote 0: Fatal error: Allowed memory size of */
 /* quotes an SQL statement */
-static int ibm_handle_quoter(
-	pdo_dbh_t *dbh,
-	const char *unq,
-	int unq_len,
-	char **q,
-	int *q_len,
-	enum pdo_param_type paramtype
-	TSRMLS_DC)
+static int ibm_handle_quoter(pdo_dbh_t *dbh, const char *unquoted, size_t unquotedlen, char **quoted, size_t *quotedlen, enum pdo_param_type paramtype TSRMLS_DC) /* {{{ */
 {
-	char *sql;
-	int new_length, i, j;
+	int qcount = 0;
+	char const *cu, *l, *r;
+	char *c;
 
-        int len;
-	if(!unq)  {
-		return FALSE;
+	if (!unquotedlen) {
+		*quotedlen = 2;
+		*quoted = emalloc(*quotedlen+1);
+		strcpy(*quoted, "''");
+		return TRUE;
 	}
 
-	/* allocate twice the source length first (worst case) */
-	sql = (char*)emalloc(((unq_len*2)+3)*sizeof(char));
+	/* count single quotes */
+	for (cu = unquoted; (cu = strchr(cu,'\'')); qcount++, cu++)
+		; /* empty loop */
 
-	/* set the first quote */
-	sql[0] = '\'';
+	*quotedlen = unquotedlen + qcount + 2;
+	*quoted = c = emalloc(*quotedlen+1);
+	*c++ = '\'';
 
-	j = 1;
-	for (i = 0; i < unq_len; i++) {
-		switch (unq[i]) {
-			case '\'':
-				sql[j++] = '\'';
-				sql[j++] = '\'';
-				break;
-			default:
-				sql[j++] = unq[i];
-				break;
-		}
+	/* foreach (chunk that ends in a quote) */
+	for (l = unquoted; (r = strchr(l,'\'')); l = r+1) {
+		strncpy(c, l, r-l+1);
+		c += (r-l+1);
+		*c++ = '\'';			/* add second quote */
 	}
 
-	/* set the last quote and null terminating character */
-	sql[j++] = '\'';
-	sql[j++] = '\0';
+    /* Copy remainder and add enclosing quote */
+	strncpy(c, l, *quotedlen-(c-*quoted)-1);
+	(*quoted)[*quotedlen-1] = '\'';
+	(*quoted)[*quotedlen]   = '\0';
 
-	/* copy over final string and free the memory used */
-	*q = (char*)emalloc(((unq_len*2)+3)*sizeof(char));
-	strcpy(*q, sql);
-	*q_len = strlen(sql);
-	efree(sql);
 	return TRUE;
 }
+/* }}} */
 
 
 /* Get the driver attributes. We return the autocommit and version information. */
