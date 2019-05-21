@@ -1,3 +1,6 @@
+# OBSOLETE
+Access new in https://github.com/kunkanon/pdo_ibm-patched
+
 # PDO_IBM-1.3.5-patched
 - PHP 7.0 pdo_ibm extension patched fixing some errors and improving new features.
 
